@@ -90,5 +90,55 @@ require("lazy").setup({
       "JuliaEditorSupport/julia-vim",
       lazy = false,
     },
+    {
+      "nickjvandyke/opencode.nvim",
+      version = "*",
+      dependencies = {
+        {
+          "folke/snacks.nvim",
+          optional = true,
+        },
+      },
+      config = function()
+        vim.g.opencode_opts = vim.g.opencode_opts or {}
+        vim.o.autoread = true
+
+        local opencode = require("opencode")
+        local map = vim.keymap.set
+
+        map({ "n", "x" }, "<leader>oa", function()
+          opencode.ask("@this: ", { submit = true })
+        end, { desc = "Ask opencode" })
+
+        map({ "n", "x" }, "<leader>os", function()
+          opencode.select()
+        end, { desc = "Open opencode actions" })
+
+        map({ "n", "t" }, "<leader>ot", function()
+          opencode.toggle()
+        end, { desc = "Toggle opencode" })
+
+        map("n", "<leader>ou", function()
+          opencode.command("session.half.page.up")
+        end, { desc = "Scroll opencode up" })
+
+        map("n", "<leader>od", function()
+          opencode.command("session.half.page.down")
+        end, { desc = "Scroll opencode down" })
+      end,
+    },
+    {
+      "folke/snacks.nvim",
+      priority = 1000,
+      lazy = false,
+      opts = {
+        image = {
+          enabled = true,
+        },
+      },
+      init = function()
+        vim.env.SNACKS_GHOSTTY = vim.env.SNACKS_GHOSTTY or "true"
+      end,
+    },
   },
 })
