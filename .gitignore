@@ -1,0 +1,8 @@
+# Neovim temporary files
+*.swp
+*.swo
+*.un~
+Session.vim
+
+# Local backup not meant for version control
+ignore_this_file_bk_init_vim.txt

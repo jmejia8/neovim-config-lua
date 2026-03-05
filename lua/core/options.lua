@@ -1,0 +1,10 @@
+vim.opt.number = true
+vim.opt.numberwidth = 1
+vim.opt.clipboard = "unnamedplus"
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.showcmd = true
+vim.opt.showmatch = true
+vim.opt.mouse = "a"
+vim.g.mapleader = " "
