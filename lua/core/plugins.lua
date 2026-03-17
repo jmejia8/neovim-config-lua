@@ -100,6 +100,29 @@ require("lazy").setup({
         local cmp = require("cmp")
         local luasnip = require("luasnip")
 
+        local cmp_select = { behavior = cmp.SelectBehavior.Select }
+
+        local function try_latex_to_unicode()
+          if vim.bo.filetype ~= "julia" then
+            return false
+          end
+          if vim.fn.exists("*LaTeXtoUnicode#Tab") == 0 then
+            return false
+          end
+
+          local cursor = vim.api.nvim_win_get_cursor(0)
+          local col = cursor[2]
+          local line = vim.api.nvim_get_current_line()
+          local prefix = line:sub(1, col)
+
+          if not prefix:match("\\[^%s\\]+$") then
+            return false
+          end
+
+          vim.fn["LaTeXtoUnicode#Tab"]()
+          return true
+        end
+
         local has_words_before = function()
           local line, col = unpack(vim.api.nvim_win_get_cursor(0))
           return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
@@ -127,6 +150,8 @@ require("lazy").setup({
                 cmp.select_next_item()
               elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
+              elseif try_latex_to_unicode() then
+                return
               elseif has_words_before() then
                 cmp.complete()
               else
@@ -192,6 +217,10 @@ require("lazy").setup({
     {
       "JuliaEditorSupport/julia-vim",
       lazy = false,
+      init = function()
+        vim.g.latex_to_unicode_tab = "on"
+        vim.g.latex_to_unicode_suggestions = 1
+      end,
     },
     {
       "windwp/nvim-autopairs",
