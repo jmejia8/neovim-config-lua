@@ -78,10 +78,14 @@ require("lazy").setup({
         vim.g.vimtex_compiler_latexmk = {
           build_dir = "build",
           aux_dir = "build",
+          out_dir = "build",
+          continuous = 1,
+          callback = 1,
           options = {
-            "-pdf",
+            "-verbose",
             "-interaction=nonstopmode",
-            "-synctex=1",
+            '-file-line-error',
+            "-synctex=0",
           },
         }
       end,
