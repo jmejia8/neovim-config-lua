@@ -27,7 +27,140 @@ require("lazy").setup({
       "nvimdev/dashboard-nvim",
       event = "VimEnter",
       dependencies = { "nvim-tree/nvim-web-devicons" },
-      opts = {},
+      opts = function()
+        local utils = require("dashboard.utils")
+
+        if not utils._dashboard_recent_dirs then
+          utils._dashboard_recent_dirs = true
+          utils.get_mru_list = function()
+            local seen = {}
+            local dirs = {}
+            for _, file in ipairs(vim.v.oldfiles or {}) do
+              if type(file) == "string" and file ~= "" then
+                local dir = vim.fn.fnamemodify(file, ":p:h")
+                if dir ~= "" and vim.fn.isdirectory(dir) == 1 then
+                  dir = vim.fs.normalize(dir)
+                  if not seen[dir] then
+                    seen[dir] = true
+                    table.insert(dirs, dir)
+                  end
+                end
+              end
+            end
+            return dirs
+          end
+        end
+
+        local function telescope_builtin(name)
+          local ok, builtin = pcall(require, "telescope.builtin")
+          if not ok then
+            return nil
+          end
+          return builtin[name]
+        end
+
+        local function telescope_git_or_files()
+          local git_files = telescope_builtin("git_files")
+          if git_files then
+            local ok = pcall(git_files, { show_untracked = true })
+            if ok then
+              return
+            end
+          end
+          local find_files = telescope_builtin("find_files")
+          if find_files then
+            find_files()
+          end
+        end
+
+        return {
+          theme = "hyper",
+          config = {
+            header = {
+              " ███╗   ██╗ ███████╗██╗   ██╗██╗███╗   ███╗",
+              " ████╗  ██║ ██╔════╝██║   ██║██║████╗ ████║",
+              " ██╔██╗ ██║ █████╗  ██║   ██║██║██╔████╔██║",
+              " ██║╚██╗██║ ██╔══╝  ██║   ██║██║██║╚██╔╝██║",
+              " ██║ ╚████║ ███████╗╚██████╔╝██║██║ ╚═╝ ██║",
+              " ╚═╝  ╚═══╝ ╚══════╝ ╚═════╝  ╚═╝╚═╝     ╚═╝",
+            },
+            week_header = {
+              enable = true,
+              concat = "  ",
+              append = { "Time to develop." },
+            },
+            shortcut = {
+              {
+                icon = " ",
+                icon_hl = "Title",
+                desc = "Projects",
+                group = "String",
+                action = telescope_git_or_files,
+                key = "p",
+                key_hl = "Number",
+              },
+              {
+                icon = "󱂬 ",
+                icon_hl = "Operator",
+                desc = "Recent Dirs",
+                group = "String",
+                action = function()
+                  local find_files = telescope_builtin("find_files")
+                  if not find_files then
+                    return
+                  end
+                  local dirs = utils.get_mru_list()
+                  if not dirs or #dirs == 0 then
+                    find_files()
+                    return
+                  end
+                  find_files({ cwd = dirs[1] })
+                end,
+                key = "r",
+                key_hl = "Number",
+              },
+              {
+                icon = " ",
+                icon_hl = "String",
+                desc = "Edit Config",
+                group = "String",
+                action = function()
+                  local find_files = telescope_builtin("find_files")
+                  if find_files then
+                    find_files({ cwd = vim.fn.stdpath("config") })
+                  end
+                end,
+                key = "c",
+                key_hl = "Number",
+              },
+            },
+            packages = { enable = true },
+            project = {
+              enable = true,
+              limit = 6,
+              icon = " ",
+              label = "Projects",
+              action = function(path)
+                local find_files = telescope_builtin("find_files")
+                if find_files then
+                  find_files({ cwd = path })
+                end
+              end,
+            },
+            mru = {
+              enable = true,
+              limit = 8,
+              icon = " ",
+              label = " Recent Directories:",
+              cwd_only = false,
+            },
+            footer = {
+              "nvim · gruvbox · dashboard-nvim",
+              "https://github.com/nvimdev/dashboard-nvim",
+            },
+          },
+        }
+      end,
     },
     {
       "nvim-tree/nvim-tree.lua",
@@ -67,6 +200,13 @@ require("lazy").setup({
     {
       "lewis6991/gitsigns.nvim",
       event = { "BufReadPre", "BufNewFile" },
+      opts = {},
+    },
+    {
+      "nvim-telescope/telescope.nvim",
+      cmd = "Telescope",
+      version = false,
+      dependencies = { "nvim-lua/plenary.nvim" },
       opts = {},
     },
     {
