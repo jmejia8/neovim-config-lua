@@ -205,18 +205,25 @@ require("lazy").setup({
       "L3MON4D3/LuaSnip",
       version = "v2.*",
       build = "make install_jsregexp",
+      dependencies = { "rafamadriz/friendly-snippets" },
       config = function()
         local luasnip = require("luasnip")
         luasnip.config.set_config({
           enable_autosnippets = false,
           store_selection_keys = "<Tab>",
         })
+        -- Load VSCode-style snippets from friendly-snippets and any other plugins
         require("luasnip.loaders.from_vscode").lazy_load()
+        -- Ensure tex snippets are also available in plaintex/latex filetypes
+        require("luasnip.loaders.from_vscode").lazy_load({
+          include = { "tex", "latex", "plaintex" },
+        })
         require("luasnip.loaders.from_lua").load({ paths = vim.fn.stdpath("config") .. "/lua/snippets" })
+
+        -- Treat plaintex and latex like tex so vscode tex snippets apply.
+        luasnip.filetype_extend("plaintex", { "tex" })
+        luasnip.filetype_extend("latex", { "tex" })
       end,
-    },
-    {
-      "rafamadriz/friendly-snippets",
     },
     {
       "JuliaEditorSupport/julia-vim",
