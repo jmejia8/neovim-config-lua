@@ -191,6 +191,7 @@ require("lazy").setup({
           ignore = false,
         },
         actions = {
+          use_system_clipboard = true,
           open_file = {
             quit_on_open = false,
           },
