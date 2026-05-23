@@ -163,42 +163,6 @@ require("lazy").setup({
       end,
     },
     {
-      "nvim-tree/nvim-tree.lua",
-      dependencies = { "nvim-tree/nvim-web-devicons" },
-      cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-      init = function()
-        vim.g.loaded_netrw = 1
-        vim.g.loaded_netrwPlugin = 1
-      end,
-      opts = {
-        sync_root_with_cwd = true,
-        view = {
-          width = 34,
-        },
-        renderer = {
-          highlight_git = true,
-          icons = {
-            show = {
-              file = true,
-              folder = true,
-              folder_arrow = true,
-              git = true,
-            },
-          },
-        },
-        git = {
-          enable = true,
-          ignore = false,
-        },
-        actions = {
-          use_system_clipboard = true,
-          open_file = {
-            quit_on_open = false,
-          },
-        },
-      },
-    },
-    {
       "lewis6991/gitsigns.nvim",
       event = { "BufReadPre", "BufNewFile" },
       opts = {},
@@ -424,11 +388,25 @@ require("lazy").setup({
       "folke/snacks.nvim",
       priority = 1000,
       lazy = false,
-      opts = {
-        image = {
-          enabled = true,
-        },
-      },
+      opts = function()
+        local files_cmd = "find"
+        if vim.fn.executable("fd") == 1 then
+          files_cmd = "fd"
+        elseif vim.fn.executable("fdfind") == 1 then
+          files_cmd = "fdfind"
+        end
+
+        return {
+          explorer = { enabled = true },
+          picker = {
+            enabled = true,
+            sources = {
+              files = { cmd = files_cmd },
+            },
+          },
+          image = { enabled = true },
+        }
+      end,
       init = function()
         vim.env.SNACKS_GHOSTTY = vim.env.SNACKS_GHOSTTY or "true"
       end,
