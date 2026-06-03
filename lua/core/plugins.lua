@@ -396,11 +396,38 @@ require("lazy").setup({
               files = { cmd = files_cmd },
             },
           },
-          image = { enabled = true },
+          image = {
+            enabled = true,
+            math = { enabled = false },
+          },
         }
       end,
       init = function()
         vim.env.SNACKS_GHOSTTY = vim.env.SNACKS_GHOSTTY or "true"
+      end,
+    },
+    {
+      "nvim-treesitter/nvim-treesitter",
+      build = ":TSUpdate",
+      config = function()
+        require("nvim-treesitter.config").setup({
+          ensure_installed = {
+            "markdown",
+            "markdown_inline",
+            "latex",
+            "lua",
+            "vim",
+            "vimdoc",
+            "query",
+            "julia",
+            "bash",
+            "python",
+            "toml",
+            "yaml",
+          },
+          auto_install = true,
+          highlight = { enable = false },
+        })
       end,
     },
   },
