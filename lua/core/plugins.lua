@@ -393,7 +393,8 @@ require("lazy").setup({
           picker = {
             enabled = true,
             sources = {
-              files = { cmd = files_cmd },
+              files = { cmd = files_cmd, hidden = true, ignored = true },
+              explorer = { hidden = true, ignored = true },
             },
           },
           image = {
