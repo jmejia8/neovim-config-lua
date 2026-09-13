@@ -397,14 +397,8 @@ require("lazy").setup({
               explorer = { hidden = true, ignored = true },
             },
           },
-          image = {
-            enabled = true,
-            math = { enabled = false },
-          },
+          image = { enabled = false },
         }
-      end,
-      init = function()
-        vim.env.SNACKS_GHOSTTY = vim.env.SNACKS_GHOSTTY or "true"
       end,
     },
     {
