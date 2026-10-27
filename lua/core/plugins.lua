@@ -24,6 +24,20 @@ require("lazy").setup({
       end,
     },
     {
+      -- Follows the system color-scheme (darkman portal); gruvbox flips with background
+      "f-person/auto-dark-mode.nvim",
+      lazy = false,
+      opts = {
+        update_interval = 1000,
+        set_dark_mode = function()
+          vim.o.background = "dark"
+        end,
+        set_light_mode = function()
+          vim.o.background = "light"
+        end,
+      },
+    },
+    {
       "nvimdev/dashboard-nvim",
       event = "VimEnter",
       dependencies = { "nvim-tree/nvim-web-devicons" },
