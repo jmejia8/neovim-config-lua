@@ -38,6 +38,19 @@ require("lazy").setup({
       },
     },
     {
+      "ernesxavier/biomes.nvim",
+      name = "biomes",
+      lazy = false,
+      priority = 1000,
+      opts = {
+        variant = "plains", -- "plains" | "cherry" | "snowy" | "nether" | "end" | "deep_dark"
+      },
+      config = function(_, opts)
+        require("biomes").setup(opts)
+        vim.cmd.colorscheme("biomes")
+      end,
+    },
+    {
       "nvimdev/dashboard-nvim",
       event = "VimEnter",
       dependencies = { "nvim-tree/nvim-web-devicons" },

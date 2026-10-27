@@ -2,7 +2,24 @@
 *.swp
 *.swo
 *.un~
+*~
 Session.vim
+.netrwhist
+
+# Compiled spell files (regenerated from spell/*.add)
+spell/*.spl
+
+# Local Lua language server overrides
+.luarc.json
+.luarc.jsonc
+
+# Local tooling
+.codegraph/
+.claude/settings.local.json
+
+# OS files
+.DS_Store
+Thumbs.db
 
 # Local backup not meant for version control
 ignore_this_file_bk_init_vim.txt
