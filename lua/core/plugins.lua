@@ -24,11 +24,24 @@ require("lazy").setup({
       end,
     },
     {
-      "nvimdev/dashboard-nvim",
-      event = "VimEnter",
-      dependencies = { "nvim-tree/nvim-web-devicons" },
-      opts = function()
-        local utils = require("dashboard.utils")
+        "ernesxavier/biomes.nvim",
+        name = "biomes",
+        lazy = false,
+        priority = 1000,
+        opts = {
+            variant = "plains", -- "plains" | "cherry" | "snowy" | "nether" | "end" | "deep_dark"
+        },
+        config = function(_, opts)
+            require("biomes").setup(opts)
+            vim.cmd.colorscheme("biomes")
+        end,
+    },
+    {
+        "nvimdev/dashboard-nvim",
+        event = "VimEnter",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = function()
+            local utils = require("dashboard.utils")
 
         if not utils._dashboard_recent_dirs then
           utils._dashboard_recent_dirs = true
