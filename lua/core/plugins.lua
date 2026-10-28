@@ -17,23 +17,21 @@ require("lazy").setup({
       "ellisonleao/gruvbox.nvim",
       priority = 1000,
       lazy = false,
-      opts = {},
       config = function()
-        vim.o.background = "dark"
-        vim.cmd.colorscheme("gruvbox")
+        require("core.theme").apply("dark")
       end,
     },
     {
-      -- Follows the system color-scheme (darkman portal); gruvbox flips with background
+      -- Follows the system color-scheme (darkman portal); light mode uses a custom bg
       "f-person/auto-dark-mode.nvim",
       lazy = false,
       opts = {
         update_interval = 1000,
         set_dark_mode = function()
-          vim.o.background = "dark"
+          require("core.theme").apply("dark")
         end,
         set_light_mode = function()
-          vim.o.background = "light"
+          require("core.theme").apply("light")
         end,
       },
     },
@@ -446,6 +444,7 @@ require("lazy").setup({
             "python",
             "toml",
             "yaml",
+            "typst",
           },
           auto_install = true,
           highlight = { enable = false },
