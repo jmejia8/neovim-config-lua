@@ -419,7 +419,11 @@ require("lazy").setup({
             enabled = true,
             sources = {
               files = { cmd = files_cmd, hidden = true, ignored = true },
-              explorer = { hidden = true, ignored = true },
+              explorer = {
+                hidden = true,
+                ignored = true,
+                win = { list = { keys = { ["s"] = "edit_vsplit" } } },
+              },
             },
           },
           image = { enabled = false },
